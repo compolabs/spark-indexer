@@ -32,7 +32,7 @@ jobs:
       - name: Stage to PROD
         if: endsWith(github.ref, '/master')
         run: |
-          echo "HEROKU_APP_NAME=spark-data-cache-service" >> $GITHUB_ENV
+          echo "HEROKU_APP_NAME=spark-indexer" >> $GITHUB_ENV
           echo "TOKEN=${{secrets.TOKEN}}" >> $GITHUB_ENV
           echo "MONGO_URL=${{secrets.MONGO_URL}}" >> $GITHUB_ENV
       - name: Set env
@@ -40,7 +40,7 @@ jobs:
       - run: heroku config:set PORT="${{env.PORT}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set MONGO_URL="${{secrets.MONGO_URL}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set PRIVATE_KEY="${{secrets.PRIVATE_KEY}}" -a ${{ env.HEROKU_APP_NAME }}
-      - run: heroku config:set CONTRACT_ADDRESSES="${{secrets.CONTRACT_ADDRESSES}}" -a ${{ env.HEROKU_APP_NAME }}
+      - run: heroku config:set CONTRACT_ADDRESS="${{secrets.CONTRACT_ADDRESS}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set NODE_URL="${{secrets.NODE_URL}}" -a ${{ env.HEROKU_APP_NAME }}
       - name:  Deploy to ${{ env.HEROKU_APP_NAME }}
         uses: akhileshns/heroku-deploy@v3.12.12
