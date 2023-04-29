@@ -1,7 +1,7 @@
 name: Deploy
 
-env:
-  PORT: 5000
+#env:
+#  PORT: 5000
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
           echo "MONGO_URL=${{secrets.MONGO_URL}}" >> $GITHUB_ENV
       - name: Set env
         run: echo ${{env.MONGO_URL }}
-      - run: heroku config:set PORT="${{env.PORT}}" -a ${{ env.HEROKU_APP_NAME }}
+#      - run: heroku config:set PORT="${{env.PORT}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set MONGO_URL="${{secrets.MONGO_URL}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set PRIVATE_KEY="${{secrets.PRIVATE_KEY}}" -a ${{ env.HEROKU_APP_NAME }}
       - run: heroku config:set CONTRACT_ADDRESS="${{secrets.CONTRACT_ADDRESS}}" -a ${{ env.HEROKU_APP_NAME }}

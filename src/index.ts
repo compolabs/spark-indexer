@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { mongoUrl, port } from "./config";
+import { mongoUrl } from "./config";
 import { initOrderFetcherCrone } from "./crones/orderFetcherCrone";
 import { initTradeFetcherCrone } from "./crones/tradeFetcherCrone";
 
