@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "dev": "nodemon",
     "build": "tsc --p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.{ts,js,tsx,jsx,css}\""
@@ -16,6 +16,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/compression": "^1.7.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.7",
+    "@types/errorhandler": "^1.5.0",
+    "@types/express": "^4.17.8",
     "@types/jest": "^26.0.14",
     "@types/mongoose": "^5.7.36",
     "@types/node": "^14.11.2",
@@ -35,12 +41,20 @@
   "dependencies": {
     "@ethersproject/bignumber": "^5.7.0",
     "@fuel-ts/wallet": "^0.39.1",
+    "@types/request": "^2.48.8",
     "bignumber.js": "^9.1.1",
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.7",
     "dotenv": "^8.6.0",
+    "errorhandler": "^1.5.1",
+    "express": "^4.18.2",
     "fuels": "^0.39.1",
     "mongoose": "^5.10.6",
     "node-cron": "^3.0.2",
+    "request": "^2.88.2",
     "tsdef": "^0.0.14"
   }
 }
