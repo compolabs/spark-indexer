@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "dev": "nodemon",
     "build": "tsc --p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.{ts,js,tsx,jsx,css}\""
