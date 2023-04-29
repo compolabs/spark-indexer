@@ -18,8 +18,7 @@ mongoose
     console.log(`❌  MongoDB connection error. Please make sure MongoDB is running. ${err}`);
     // process.exit();
   });
-Promise.all([initOrderFetcherCrone(), initTradeFetcherCrone()])
-.then(() => {
+Promise.all([initOrderFetcherCrone(), initTradeFetcherCrone()]).then(() => {
   app.listen(port ?? 5000, () => {
     console.log("🚀 Server ready at: http://localhost:" + port);
   });
