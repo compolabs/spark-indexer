@@ -19,9 +19,6 @@ class OrdersFetcher {
     this.setInitialized(true);
   };
 
-  newOrderFetchIsRunning = false;
-  updateActiveOrdersIsRunning = false;
-
   public fetchNewOrders = async () => {
     const totalOrdersAmount = await this.getOrdersAmount().then((v) => v.toNumber());
     const limitOrdersContract = this.wallet();
@@ -32,23 +29,31 @@ class OrdersFetcher {
       await Order.deleteMany().then(this.fetchAllOrders);
       return;
     }
-
     const length = new BN(totalOrdersAmount.toString())
       .minus(lastOrderId)
       .div(10)
       .toDecimalPlaces(0, BigNumber.ROUND_CEIL)
       .toNumber();
     if (length === 0) return;
-    const chunks = await Promise.all(
-      Array.from({ length }, (_, i) =>
-        functions!
-          .orders(i * 10)
-          .get()
-          .then((res) => res.value.filter((v) => v != null && v.id.gt(lastOrderId)))
-          .then((res) => res.map(orderOutputToIOrder))
-      )
-    );
-    await Order.insertMany(chunks.flat().reverse());
+    for (let i = 0; i < length; i++) {
+      const orders = await functions
+        .orders(i * 10)
+        .get()
+        .then((res) => res.value.filter((v) => v != null && v.id.gt(lastOrderId)))
+        .then((res) => res.map(orderOutputToIOrder));
+      await Order.insertMany(orders);
+      console.log(`👌 Orders added ${orders.map((o) => o.id)}`);
+    }
+    // const chunks = await Promise.all(
+    //   Array.from({ length }, (_, i) =>
+    //     functions!
+    //       .orders(i * 10)
+    //       .get()
+    //       .then((res) => res.value.filter((v) => v != null && v.id.gt(lastOrderId)))
+    //       .then((res) => res.map(orderOutputToIOrder))
+    //   )
+    // );
+    // await Order.insertMany(chunks.flat().reverse());
   };
 
   wallet = () => {
@@ -58,90 +63,29 @@ class OrdersFetcher {
   };
 
   public updateActiveOrders = async () => {
-    if (this.updateActiveOrdersIsRunning) {
-      console.log("🍃 update Active Orders Is Running skip");
-      return;
-    }
-    this.updateActiveOrdersIsRunning = true;
     const limitOrdersContract = this.wallet();
     const functions = limitOrdersContract.functions;
     const activeOrders = await Order.find({ status: "Active" });
     const chunks = sliceIntoChunks(activeOrders, 10).map((chunk) =>
       chunk.map((o) => o.id.toString()).concat(Array(10 - chunk.length).fill("0"))
     );
-    console.log("chunks length:", chunks.length);
-    const results: Array<Array<OrderOutput>> = [];
 
-    const batches = [];
-    const chunkSize = 10;
-    for (let i = 0; i < chunks.length; i += chunkSize) {
-      const batch = chunks.slice(i, i + chunkSize);
-      batches.push(batch);
-    }
-    await batches.reduce(async (promise, batch, index) => {
-      await promise;
-      await sleep(5000);
+    for (let i in chunks) {
+      const chunk = chunks[i];
+      const orders = await functions
+        .orders_by_id(chunk as any)
+        .get()
+        .then((res) => res.value);
       await Promise.all(
-        batch.map((chunk, indexb) => {
-          console.log("--->>> batch:", index, "chunk:", indexb);
-          return functions
-            .orders_by_id(chunk as any)
-            .get()
-            .then((res) => results.push(res.value))
-            .catch((err) => {
-              console.log(JSON.stringify(chunk, null, " "));
-              console.log(err);
-            });
+        orders.map((orderOutput) => {
+          if (orderOutput != null) {
+            const order = orderOutputToIOrder(orderOutput);
+            return Order.updateOne({ id: order.id }, order);
+          }
         })
       );
-    }, Promise.resolve());
-
-    //
-    // for (let batch in batchs) {
-    //
-    //   // counter++;
-    //   // if (counter > 5) {
-    //   //   counter = 0;
-    //   //   batch++;
-    //   // }
-    //   const chunk = chunks[i];
-    //   // sleep(batch * 1000).then(() => {
-    //   console.log(i, "/", chunks.length);
-    //   const res = results.push(res);
-    //   // });
-    //
-    //   // results.push(result);
-    //   // .catch(console.error)
-    // }
-    // const results: Array<any> = [];
-    // let counter = 0;
-    // let batch = 0;
-    // await chunks.reduce(async (promise, chunk, index) => {
-    //   await promise;
-    //   counter++;
-    //   if (counter > 5) {
-    //     counter = 0;
-    //     batch++;
-    //   }
-    //   await sleep(batch * 200);
-    //   console.log("-->>>>", index);
-    //   functions
-    //     .orders_by_id(chunk as any)
-    //     .get()
-    //     .then((res) => results.push(res.value));
-    //   // .catch(console.error)
-    // }, Promise.resolve());
-    const flat = results.flat();
-
-    await Promise.all(
-      flat.map((orderOutput) => {
-        if (orderOutput != null) {
-          const order = orderOutputToIOrder(orderOutput);
-          return Order.updateOne({ id: order.id }, order);
-        }
-      })
-    );
-    console.log("🏁 finish");
+      // console.log(`👌 Orders updated ${orders.filter((o) => o != null).map((o) => o.id)}`);
+    }
   };
 
   private fetchAllOrders = async () => {
