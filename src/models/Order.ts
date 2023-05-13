@@ -49,13 +49,6 @@ export const orderOutputToIOrder = (order: OrderOutput): IOrder => {
         : BN.formatUnits(order.amount0.toString(), USDC.decimals)
             .div(BN.formatUnits(order.amount1.toString(), BTC.decimals))
             .toNumber(),
-    // type === "SELL"
-    //   ? BN.formatUnits(order.amount0.toString(), BTC.decimals)
-    //       .div(BN.formatUnits(order.amount1.toString(), USDC.decimals))
-    //       .toNumber()
-    //   : BN.formatUnits(order.amount1.toString(), BTC.decimals)
-    //       .div(BN.formatUnits(order.amount0.toString(), USDC.decimals))
-    //       .toNumber(),
   };
 };
 

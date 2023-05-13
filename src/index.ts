@@ -20,5 +20,5 @@ mongoose
     // process.exit();
   });
 
-initOrderFetcherCrone();
-initTradeFetcherCrone();
+// initOrderFetcherCrone();
+// initTradeFetcherCrone();

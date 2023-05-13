@@ -39,7 +39,11 @@ class TradesFetcher {
         .trades(offset)
         .get()
         .then(({ value }) => value.map((t) => (t != null ? tradeOutputToITrade(t) : null)))
-        .then((batch) => batch.filter((t) => t != null && t.timestamp > timestamp) as ITrade[]);
+        .then((batch) => batch.filter((t) => t != null && t.timestamp > timestamp) as ITrade[])
+        .catch((e) => {
+          console.error("❌ trades update", e);
+          return [];
+        });
       trades = [...trades, ...batch];
       // console.log({ timestamp: batch[batch.length - 1]?.timestamp, len: trades.length, offset });
       offset++;
