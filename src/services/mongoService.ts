@@ -8,12 +8,9 @@ export const initMongo = (): Promise<void> =>
       useCreateIndex: true,
       useUnifiedTopology: true,
     })
-    .then(() => {
-      console.log("\nConnected to MongoDB ✅  ", mongoUrl);
-      /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
-    })
+    .then(() => console.log("\nConnected to MongoDB ✅"))
     .catch((err) => {
       console.log(`❌  MongoDB connection error. Please make sure MongoDB is running. ${err}`);
-      // process.exit();
+      process.exit();
     });
 export default { initMongo };
