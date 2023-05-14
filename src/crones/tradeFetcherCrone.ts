@@ -5,9 +5,6 @@ export const initTradeFetcherCrone = async () => {
   let isRunning = false;
   const fetcher = new TradesFetcher();
   await fetcher.init().then(() => console.log("✅ Trades Fetcher initialized"));
-  // const scheduledJobFunction = schedule("*/30 * * * * *", () =>
-  //   fetcher.sync().catch((e) => console.error(`❌ Trades sync ${e.toString()}`))
-  // );
   const scheduledJobFunction = schedule("*/30 * * * * *", () =>
     !isRunning
       ? new Promise((r) => r(""))

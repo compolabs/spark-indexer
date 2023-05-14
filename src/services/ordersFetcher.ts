@@ -25,10 +25,8 @@ class OrdersFetcher {
     const functions = limitOrdersContract.functions;
     const lastOrderId = await this.getLastOrderFromDb().then((o) => o.id);
     if (lastOrderId === totalOrdersAmount) return;
-    if (lastOrderId > totalOrdersAmount) {
-      await Order.deleteMany().then(this.fetchAllOrders);
-      return;
-    }
+    if (lastOrderId > totalOrdersAmount) console.log("⚠️ lastOrderId > totalOrdersAmount");
+
     const length = new BN(totalOrdersAmount.toString())
       .minus(lastOrderId)
       .div(10)
@@ -44,16 +42,6 @@ class OrdersFetcher {
       await Order.insertMany(orders);
       console.log(`👌 Orders added ${orders.map((o) => o.id)}`);
     }
-    // const chunks = await Promise.all(
-    //   Array.from({ length }, (_, i) =>
-    //     functions!
-    //       .orders(i * 10)
-    //       .get()
-    //       .then((res) => res.value.filter((v) => v != null && v.id.gt(lastOrderId)))
-    //       .then((res) => res.map(orderOutputToIOrder))
-    //   )
-    // );
-    // await Order.insertMany(chunks.flat().reverse());
   };
 
   wallet = () => {
@@ -84,7 +72,7 @@ class OrdersFetcher {
           }
         })
       );
-      // console.log(`👌 Orders updated ${orders.filter((o) => o != null).map((o) => o.id)}`);
+      console.log(`👌 Orders updated ${orders.filter((o) => o != null).map((o) => o.id)}`);
     }
   };
 
@@ -97,16 +85,25 @@ class OrdersFetcher {
       .div(10)
       .toDecimalPlaces(0, BigNumber.ROUND_CEIL)
       .toNumber();
-    const chunks = await Promise.all(
-      Array.from({ length }, (_, i) =>
-        functions
-          .orders(i * 10)
-          .get()
-          .then((res) => res.value.filter((v) => v != null))
-      )
-    );
-
-    await Order.insertMany(chunks.flat().map(orderOutputToIOrder).flat().reverse());
+    // const chunks = await Promise.all(
+    //   Array.from({ length }, (_, i) =>
+    //     functions
+    //       .orders(i * 10)
+    //       .get()
+    //       .then((res) => res.value.filter((v) => v != null))
+    //   )
+    // );
+    //
+    // await Order.insertMany(chunks.flat().map(orderOutputToIOrder).flat().reverse());
+    for (let i = 0; i < length; i++) {
+      const orders = await functions
+        .orders(i * 10)
+        .get()
+        .then((res) => res.value.filter((v) => v != null))
+        .then((res) => res.map(orderOutputToIOrder));
+      await Order.insertMany(orders);
+      console.log(`👌 Orders added ${orders.map((o) => o.id)}`);
+    }
   };
 
   private getOrdersAmount = () =>
