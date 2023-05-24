@@ -1,0 +1,139 @@
+{
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "b256",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 2,
+      "type": "struct Address",
+      "components": [
+        {
+          "name": "value",
+          "type": 1,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 3,
+      "type": "struct ContractId",
+      "components": [
+        {
+          "name": "value",
+          "type": 1,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 4,
+      "type": "struct ProxySendFundsToPredicateParams",
+      "components": [
+        {
+          "name": "predicate_root",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "asset0",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "asset1",
+          "type": 3,
+          "typeArguments": null
+        },
+        {
+          "name": "maker",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "min_fulfill_amount0",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "price",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "asset0_decimals",
+          "type": 6,
+          "typeArguments": null
+        },
+        {
+          "name": "asset1_decimals",
+          "type": 6,
+          "typeArguments": null
+        },
+        {
+          "name": "price_decimals",
+          "type": 6,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 5,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 6,
+      "type": "u8",
+      "components": null,
+      "typeParameters": null
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "params",
+          "type": 4,
+          "typeArguments": null
+        }
+      ],
+      "name": "send_funds_to_predicate_root",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    }
+  ],
+  "loggedTypes": [
+    {
+      "logId": 0,
+      "loggedType": {
+        "name": "",
+        "type": 4,
+        "typeArguments": []
+      }
+    }
+  ],
+  "messagesTypes": [],
+  "configurables": []
+}

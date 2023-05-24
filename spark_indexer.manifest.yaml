@@ -1,0 +1,13 @@
+---
+namespace: compolabs
+abi: "./proxy-contract-abi.json"
+identifier: spark_indexer
+fuel_client: ~
+graphql_schema: schema/spark_indexer.schema.graphql
+module:
+  wasm: target/wasm32-unknown-unknown/release/spark_indexer.wasm
+metrics: ~
+contract_id: "0x8924a38ac11879670de1d0898c373beb1e35dca974c4cab8a70819322f6bd9c4"
+start_block: 0
+end_block: ~
+resumable: ~
