@@ -33,6 +33,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "android-tzdata"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e999941b234f3131b00bc13c22d06e8c5ff726d1b6318ac7eb276997bbb4fef0"
+
+[[package]]
 name = "android_system_properties"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -269,13 +275,13 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chrono"
-version = "0.4.24"
+version = "0.4.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e3c5919066adf22df73762e50cffcde3a758f2a848b113b586d1f86728b673b"
+checksum = "fdbc37d37da9e5bce8173f3a41b71d9bf3c674deebbaceacd0ebdabde76efb03"
 dependencies = [
+ "android-tzdata",
  "iana-time-zone",
  "js-sys",
- "num-integer",
  "num-traits",
  "serde",
  "time",
@@ -698,9 +704,9 @@ dependencies = [
 
 [[package]]
 name = "fuel-indexer-database-types"
-version = "0.14.0"
+version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d953ca08ceb593dd104ce6e94af2f6982077e420840974b9a3b0d9bcb2bdc9d"
+checksum = "d1919707ee792871d4df7a2dd842888d1e7af85c32074417f9bcff1f477c7058"
 dependencies = [
  "chrono",
  "serde",
@@ -709,11 +715,12 @@ dependencies = [
 
 [[package]]
 name = "fuel-indexer-lib"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "402b24a67cfdd22fa8c817abde88b89ff4ab1a303bc9481e810bd45e257d45da"
+checksum = "05dee5f03795ce5617e03e0b608a37de0e91e62a3b30a0f01edc00a235c5b7df"
 dependencies = [
  "anyhow",
+ "bincode",
  "clap",
  "fuel-indexer-types",
  "http",
@@ -731,9 +738,9 @@ dependencies = [
 
 [[package]]
 name = "fuel-indexer-macros"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e3bdbf5ff3f68c98b845f21e465704a73622e08f998a7a96f5f58da0f084145"
+checksum = "fc142d5b38a205479c5aa725366d61e4c9ace8f7cc613e4fa1a1dcd28aef3580"
 dependencies = [
  "async-graphql-parser",
  "fuel-abi-types",
@@ -754,9 +761,9 @@ dependencies = [
 
 [[package]]
 name = "fuel-indexer-plugin"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5517084e8abf74c5adfa39d3fd1ee78743e08dc13cfc9e7f9162f26452988baa"
+checksum = "c7046cabc17ecaddb5f772170f0e9f7ad4e8ce872ba3ef5f5b206ab4ac1c3020"
 dependencies = [
  "bincode",
  "fuel-indexer-lib",
@@ -764,17 +771,17 @@ dependencies = [
  "fuel-indexer-types",
  "hex",
  "serde",
+ "serde_json",
  "sha2 0.10.6",
 ]
 
 [[package]]
 name = "fuel-indexer-schema"
-version = "0.14.0"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd97bcb0afddf75a022222f9d2eaa7fee7f54533479a0cc47a0c67d27d0c23c4"
+checksum = "be19d923b58f99a54c61a72f58f759e026d84f5d7ae368e07776297a5e4e2d6f"
 dependencies = [
  "async-graphql-parser",
- "bincode",
  "fuel-indexer-database-types",
  "fuel-indexer-types",
  "hex",
@@ -785,9 +792,9 @@ dependencies = [
 
 [[package]]
 name = "fuel-indexer-types"
-version = "0.14.0"
+version = "0.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9da0aa4767da5d9e9a12793431c05c5b66a340c4c065cad711b6b0365219e80"
+checksum = "17a2715f0436c25b4a0c2234a17eef40242b67610b536de7dcc759cadbf5469e"
 dependencies = [
  "bincode",
  "bytes",
@@ -1721,6 +1728,7 @@ dependencies = [
  "fuel-indexer-plugin",
  "fuel-indexer-schema",
  "fuels",
+ "rand",
  "serde",
 ]
 

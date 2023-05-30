@@ -4,7 +4,7 @@ type Block {
     hash: Bytes32! @unique
 }
 
-type Params {
+type OrderData {
     id: ID!
     predicate_root: Address!
     asset0: ContractId!
