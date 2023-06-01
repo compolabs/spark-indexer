@@ -17,6 +17,15 @@ type OrderData {
     price_decimals: UInt4!
 }
 
+type TradeData {
+    predicate_root: Address!
+    asset0: ContractId!
+    asset1: ContractId!
+    amount0: UInt8!
+    amount1: UInt8!
+    timestamp: UInt8!
+}
+
 type Tx {
     id: ID!
     block: Block!
