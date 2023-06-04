@@ -53,7 +53,7 @@ pub mod compolabs_index_mod {
                 }
                 let coin_predicate_input = asset0_predicate_input.unwrap();
                 let asset1_output = asset1_output.unwrap();
-                
+
                 // TODO
                 // let asset0_change_output = outputs.iter().find(|o| {
                 //     o.is_coin()
