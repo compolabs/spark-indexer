@@ -8,6 +8,6 @@ publish = false
 crate-type = ['cdylib']
 
 [dependencies]
-fuel-indexer-utils = { version = "0.16.0", features = ["native-execution"] }
+fuel-indexer-utils = { version = "0.16.0" }
 fuels = { version = "0.40", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive"] }

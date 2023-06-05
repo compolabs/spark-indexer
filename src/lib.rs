@@ -1,7 +1,5 @@
 extern crate alloc;
-use fuel_indexer_macros::indexer;
-use fuel_indexer_plugin::types::BlockData;
-use fuel_indexer_plugin::utils::first8_bytes_to_u64;
+use fuel_indexer_utils::prelude::*;
 
 const PROXY: &str = "0x8924a38ac11879670de1d0898c373beb1e35dca974c4cab8a70819322f6bd9c4";
 #[indexer(manifest = "spark_indexer.manifest.yaml")]
@@ -40,53 +38,38 @@ pub mod compolabs_index_mod {
             }
             // Logger::info(&format!("📬 Order handler finished for block {}", tx.id));
 
-            if tx.transaction.is_script() {
-                let script = tx.clone().transaction.as_script().unwrap().clone();
-
-                let inputs = script.inputs();
-                let outputs = script.outputs();
-                let asset0_predicate_input = inputs.iter().find(|i| i.is_coin_predicate());
-                let asset1_output = outputs.get(0);
-                if asset0_predicate_input.is_none() || asset1_output.is_none() {
-                    // Logger::info(&format!("🍃 Wrong inputs/otputs, skipping",));
-                    continue;
+            match tx.transaction {
+                #[allow(unused)]
+                fuel::Transaction::Script(fuel::Script {
+                    gas_limit,
+                    gas_price,
+                    maturity,
+                    script,
+                    script_data,
+                    receipts_root,
+                    inputs,
+                    outputs,
+                    witnesses,
+                    metadata,
+                }) => {
+                    let trade = TradeData {
+                        predicate_root: Address::default(),
+                        asset0: ContractId::default(),
+                        asset1: ContractId::default(),
+                        amount0: 0,
+                        amount1: 0,
+                        timestamp: timestamp_by_status(tx.status),
+                    };
+                    trade.save();
+                    Logger::info(&format!("🐲 Trade {trade:#?}"));
                 }
-                let coin_predicate_input = asset0_predicate_input.unwrap();
-                let asset1_output = asset1_output.unwrap();
-
-                // TODO
-                // let asset0_change_output = outputs.iter().find(|o| {
-                //     o.is_coin()
-                //         && o.asset_id().is_some()
-                //         && o.to().is_some()
-                //         && o.asset_id().unwrap() == asset0.unwrap()
-                //         && o.to().unwrap() == predicate_root.unwrap()
-                // });
-                let amount0 = 0; //input0.amount().unwrap_or(0) - output3.amount().unwrap_or(0); //TODO
-                let amount1 = 0; //input1.amount().unwrap_or(0) - output1.amount().unwrap_or(0); //TODO
-
-                let predicate_root = coin_predicate_input.input_owner();
-                let asset0 = coin_predicate_input.asset_id();
-                let asset1 = asset1_output.asset_id();
-                let timestamp = timestamp_by_status(tx.status);
-                if asset0.is_none() || asset1.is_none() || predicate_root.is_none() {
-                    // Logger::info(&format!("🍃 Wrong asset0/asset1/predicate_root, skipping",));
-                    continue;
+                _ => {
+                    Logger::info("Ignoring this transaction type.");
                 }
-
-                let trade = TradeData {
-                    predicate_root: *predicate_root.unwrap(),
-                    asset0: ContractId::new(**asset0.unwrap()),
-                    asset1: ContractId::new(**asset1.unwrap()),
-                    amount0,
-                    amount1,
-                    timestamp,
-                };
-                trade.save();
-                Logger::info(&format!("🐲 Trade {trade:#?}"));
             }
+
+            Logger::info(&format!("🏁 Block {height} handler finished"));
         }
-        Logger::info(&format!("🏁 Block {height} habdler finished"));
     }
 
     fn handle_log_data(data: ProxySendFundsToPredicateParams) {
@@ -110,10 +93,9 @@ pub mod compolabs_index_mod {
     }
 }
 
-fn timestamp_by_status(status: ClientTransactionStatusData) -> u64 {
-    if let ClientTransactionStatusData::Success { time, block_id: _ } = status {
-        time.timestamp().try_into().unwrap_or(0)
-    } else {
-        0
+fn timestamp_by_status(status: fuel::TransactionStatus) -> u64 {
+    match status {
+        fuel::TransactionStatus::Success { time, .. } => time,
+        _ => 0,
     }
 }
