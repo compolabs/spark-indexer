@@ -18,6 +18,7 @@ type OrderData {
 }
 
 type TradeData {
+    id: ID!
     predicate_root: Address!
     asset0: ContractId!
     asset1: ContractId!

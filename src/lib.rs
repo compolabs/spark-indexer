@@ -13,6 +13,11 @@ pub mod compolabs_index_mod {
         Logger::info(&format!("🧱 Block height: {height} | transacrions: {txs}"));
 
         for tx in block.transactions.clone() {
+            match tx.status {
+                fuel::TransactionStatus::Failure { .. } => continue,
+                _ => (),
+            }
+
             let receipt = tx.receipts.iter().find(|receipt| receipt.data().is_some());
             if receipt.is_some() {
                 let receipt = receipt.unwrap();
@@ -36,39 +41,6 @@ pub mod compolabs_index_mod {
                     Logger::info(&format!("📬 Order: {:#?} ", order));
                 }
             }
-            // Logger::info(&format!("📬 Order handler finished for block {}", tx.id));
-
-            match tx.transaction {
-                #[allow(unused)]
-                fuel::Transaction::Script(fuel::Script {
-                    gas_limit,
-                    gas_price,
-                    maturity,
-                    script,
-                    script_data,
-                    receipts_root,
-                    inputs,
-                    outputs,
-                    witnesses,
-                    metadata,
-                }) => {
-                    let trade = TradeData {
-                        predicate_root: Address::default(),
-                        asset0: ContractId::default(),
-                        asset1: ContractId::default(),
-                        amount0: 0,
-                        amount1: 0,
-                        timestamp: timestamp_by_status(tx.status),
-                    };
-                    trade.save();
-                    Logger::info(&format!("🐲 Trade {trade:#?}"));
-                }
-                _ => {
-                    Logger::info("Ignoring this transaction type.");
-                }
-            }
-
-            Logger::info(&format!("🏁 Block {height} handler finished"));
         }
     }
 
@@ -93,6 +65,7 @@ pub mod compolabs_index_mod {
     }
 }
 
+#[allow(unused)]
 fn timestamp_by_status(status: fuel::TransactionStatus) -> u64 {
     match status {
         fuel::TransactionStatus::Success { time, .. } => time,
