@@ -18,50 +18,20 @@ pub mod compolabs_index_mod {
                 _ => (),
             }
 
-            let receipt = tx.receipts.iter().find(|receipt| receipt.data().is_some());
-            if receipt.is_some() {
-                let receipt = receipt.unwrap();
-                let data = ProxySendFundsToPredicateParams::try_from(receipt.data().unwrap_or(&[]));
-                let id = receipt.id();
-                if data.is_ok() && id.is_some() && id.unwrap().to_owned() == proxy_contract_id {
-                    let data = data.unwrap();
-                    let order = OrderData {
-                        id: first8_bytes_to_u64(data.predicate_root),
-                        predicate_root: data.predicate_root,
-                        asset0: data.asset_0,
-                        asset1: data.asset_1,
-                        maker: data.maker,
-                        min_fulfill_amount0: data.min_fulfill_amount_0,
-                        price: data.price,
-                        asset0_decimals: data.asset_0_decimals.into(),
-                        asset1_decimals: data.asset_1_decimals.into(),
-                        price_decimals: data.price_decimals.into(),
-                    };
-                    order.save();
-                    Logger::info(&format!("📬 Order: {:#?} ", order));
+            tx.receipts.iter().for_each(|receipt| {
+                if receipt.data().is_some() {
+                    let data = ProxySendFundsToPredicateParams::try_from(receipt.data().unwrap());
+                    let id = receipt.id();
+                    if data.is_ok() && id.is_some() && id.unwrap().to_owned() == proxy_contract_id {
+                        Logger::info(&format!("📬 Order: {:#?} ", data));
+                    }
                 }
-            }
+            });
         }
     }
 
     fn handle_log_data(data: ProxySendFundsToPredicateParams) {
         Logger::info(format!("✨ ProxySendFundsToPredicateParams \n{:?}", data).as_str());
-    }
-
-    fn handle_call(call: Call) {
-        Logger::info(format!("🤙 Call \n{:?}", call).as_str());
-    }
-
-    fn handle_log(log: Log) {
-        Logger::info(format!("📝 Log \n{:?}", log).as_str());
-    }
-
-    fn handle_transfer(transfer: Transfer) {
-        Logger::info(format!("💸 Transfer \n{:?}", transfer).as_str());
-    }
-
-    fn handle_transferout(transfer_out: TransferOut) {
-        Logger::info(format!("🍃 TransferOut \n{:?}", transfer_out).as_str());
     }
 }
 
