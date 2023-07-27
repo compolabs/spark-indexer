@@ -7,9 +7,12 @@ pub mod compolabs_index_mod {
     fn handle_order_slot(data: ProxySendFundsToPredicateParams) {
         //TODO validate the proxy contract
         // const PROXY: &str = "0x8924a38ac11879670de1d0898c373beb1e35dca974c4cab8a70819322f6bd9c4";
-        Logger::info(format!("✨ Order slot: {:#?}", data).as_str());
+        info!("Order slot {:#?}", data);
+
         let order = OrderData {
-            id: first8_bytes_to_u64(data.predicate_root),
+
+            // https://docs.rs/fuel-indexer-utils/0.18.5/fuel_indexer_utils/prelude/fn.id8.html
+            id: id8(data.predicate_root),
             predicate_root: data.predicate_root,
             asset0: data.asset_0,
             asset1: data.asset_1,

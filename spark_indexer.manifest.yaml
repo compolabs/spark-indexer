@@ -1,7 +1,7 @@
 ---
 namespace: compolabs
-abi: "./proxy-contract-abi.json"
 identifier: spark_indexer
+abi: "./proxy-contract-abi.json"
 fuel_client: ~
 graphql_schema: schema/spark_indexer.schema.graphql
 module:
