@@ -3,14 +3,25 @@ use fuel_indexer_utils::prelude::*;
 
 #[indexer(manifest = "spark_indexer.manifest.yaml")]
 pub mod compolabs_index_mod {
-
+    fn handle_block(block: BlockData) {
+        let height = block.height;
+        let txs = block.transactions.len();
+        info!("🧱 Block height: {height} | transacrions: {txs}");
+        for transaction in block.transactions.iter() {
+            match transaction.status {
+                fuel::TransactionStatus::Success { .. } => {
+                    info!("✅ transaction {:?}", transaction)
+                }
+                _ => (),
+            }
+        }
+    }
     fn handle_order_slot(data: ProxySendFundsToPredicateParams) {
         //TODO validate the proxy contract
         // const PROXY: &str = "0x8924a38ac11879670de1d0898c373beb1e35dca974c4cab8a70819322f6bd9c4";
-        info!("Order slot {:#?}", data);
+        info!("✨ Order slot {:#?}", data);
 
         let order = OrderData {
-
             // https://docs.rs/fuel-indexer-utils/0.18.5/fuel_indexer_utils/prelude/fn.id8.html
             id: id8(data.predicate_root),
             predicate_root: data.predicate_root,
